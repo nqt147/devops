@@ -1,0 +1,85 @@
+{
+  "alert_call": {
+    "body_call": {
+      "from": {
+        "type": "external",
+        "number": "842871099109",
+        "alias": "SmartPay"
+      },
+      "to": [
+        {
+          "type": "external",
+          "number": "84964129341",
+          "alias": ""
+        }
+      ],
+      "answer_url": "http://v2.stringee.com:8282/project_answer_url",
+      "actions": []
+    },
+    "call_url": "https://api.stringee.com/v1/call2/callout",
+    "key_sid": "SKC8JgoDpKcH6ihhAq9ymgtAy9Gn5lkb9q",
+    "key_secret": "ZUFYdWRwcGE1Rjk4WnFJMTZMcTJBS202dzM0RURodQ==",
+    "day_in_week": {
+      "Monday": [
+        {
+          "number": "84964129341",
+          "priority": "0"
+        }
+      ],
+      "Tuesday": [
+        {
+          "number": "84964129341",
+          "priority": "0"
+        }
+      ],
+      "Wednesday": [
+        {
+          "number": "84964129341",
+          "priority": "0"
+        }
+      ],
+      "Thursday": [
+        {
+          "number": "84964129341",
+          "priority": "0"
+        }
+      ],
+      "Friday": [
+        {
+          "number": "84964129341",
+          "priority": "0"
+        }
+      ],
+      "Saturday": [
+        {
+          "number": "84964129341",
+          "priority": "0"
+        }
+      ],
+      "Sunday": [
+        {
+          "number": "84777091832",
+          "priority": "0"
+        }
+      ]
+    }
+  },
+  "alert_restart":{
+    "path":"./script/restart_operation_tool.sh"
+  },
+  "check_file_ipat": {
+    "path": "./excel/smarttest/"
+  },
+  "sync_file_ipat": {
+    "path": "./script/sync_file_IPAT.sh"
+  },
+  "move_file_ipat": {
+    "path": "./script/sync_file_IPAT.sh"
+  },
+  "export_file_ipat": {
+    "path": "./script/run_export_file_ipat.sh"
+  },
+  "restart_merchant_hivemq": {
+    "path": "./script/restart_sp_merchant_consumer_hivemq.sh"
+  }
+}

@@ -1,0 +1,62 @@
+2021-01-14 01:10:00.607  WARN 29238 --- [main] o.s.boot.StartupInfoLogger               : InetAddress.getLocalHost().getHostName() took 5003 milliseconds to respond. Please verify your network configuration (macOS machines may need to add entries to /etc/hosts).
+2021-01-14 01:10:05.612  INFO 29238 --- [main] c.v.s.a.AlertMonitorApplication          : Starting AlertMonitorApplication on macs-MacBook-Pro.local with PID 29238 (/Users/nqthinh/Documents/devops/smartpay/monitoring-alert/alert-monitor/target/classes started by macbook in /Users/nqthinh/Documents/devops/smartpay/monitoring-alert/alert-monitor)
+2021-01-14 01:10:05.613  INFO 29238 --- [main] c.v.s.a.AlertMonitorApplication          : No active profile set, falling back to default profiles: default
+2021-01-14 01:10:06.153  INFO 29238 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 2104 (http)
+2021-01-14 01:10:06.159  INFO 29238 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-01-14 01:10:06.159  INFO 29238 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.38]
+2021-01-14 01:10:06.197  INFO 29238 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-01-14 01:10:06.197  INFO 29238 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 557 ms
+2021-01-14 01:10:06.433  INFO 29238 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-01-14 01:10:06.533  INFO 29238 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2021-01-14 01:10:06.556  WARN 29238 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'; nested exception is org.springframework.boot.web.server.PortInUseException: Port 2104 is already in use
+2021-01-14 01:10:06.556  INFO 29238 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2021-01-14 01:10:06.557  INFO 29238 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-01-14 01:10:06.559  INFO 29238 --- [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2021-01-14 01:10:06.567  INFO 29238 --- [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-01-14 01:10:06.570 ERROR 29238 --- [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 2104 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 2104 or configure this application to listen on another port.
+
+2021-01-14 01:10:42.202  WARN 29261 --- [main] o.s.boot.StartupInfoLogger               : InetAddress.getLocalHost().getHostName() took 5004 milliseconds to respond. Please verify your network configuration (macOS machines may need to add entries to /etc/hosts).
+2021-01-14 01:10:47.209  INFO 29261 --- [main] c.v.s.a.AlertMonitorApplication          : Starting AlertMonitorApplication on macs-MacBook-Pro.local with PID 29261 (/Users/nqthinh/Documents/devops/smartpay/monitoring-alert/alert-monitor/target/classes started by macbook in /Users/nqthinh/Documents/devops/smartpay/monitoring-alert/alert-monitor)
+2021-01-14 01:10:47.210  INFO 29261 --- [main] c.v.s.a.AlertMonitorApplication          : No active profile set, falling back to default profiles: default
+2021-01-14 01:10:47.754  INFO 29261 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 2104 (http)
+2021-01-14 01:10:47.759  INFO 29261 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-01-14 01:10:47.759  INFO 29261 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.38]
+2021-01-14 01:10:47.798  INFO 29261 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-01-14 01:10:47.798  INFO 29261 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 559 ms
+2021-01-14 01:10:48.037  INFO 29261 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-01-14 01:10:48.125  INFO 29261 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2021-01-14 01:10:48.148  WARN 29261 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'; nested exception is org.springframework.boot.web.server.PortInUseException: Port 2104 is already in use
+2021-01-14 01:10:48.149  INFO 29261 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2021-01-14 01:10:48.149  INFO 29261 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-01-14 01:10:48.151  INFO 29261 --- [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2021-01-14 01:10:48.160  INFO 29261 --- [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-01-14 01:10:48.163 ERROR 29261 --- [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 2104 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 2104 or configure this application to listen on another port.
+
