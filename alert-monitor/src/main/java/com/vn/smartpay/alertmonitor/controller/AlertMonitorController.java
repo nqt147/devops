@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -44,6 +45,15 @@ public class AlertMonitorController {
         logger.info("Request: {}", data);
         JsonObject joData = JsonParser.parseString(data).getAsJsonObject();
         alertMonitorService.alertMonitorCallText(joData);
+        return new ResponseEntity<>("success!", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/alert_call_supper", method = RequestMethod.GET)
+    public ResponseEntity<String> alertCallSupper(
+            @RequestParam(value = "list_phone", defaultValue = "aaa") String listPhone,
+            @RequestParam(value = "speak_text", defaultValue = "error") String speakText) throws IOException {
+        System.out.println(listPhone + speakText);
+        alertMonitorService.alertMonitorCallSupper(listPhone, speakText);
         return new ResponseEntity<>("success!", HttpStatus.OK);
     }
 

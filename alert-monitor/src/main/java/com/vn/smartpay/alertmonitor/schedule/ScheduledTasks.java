@@ -119,62 +119,6 @@ public class ScheduledTasks {
         }
     }
 
-    @Scheduled(cron = "${cron.expression.double.check.ipat}")
-    public void doubleCheckFileIPAT() throws IOException {
-
-        Map<String, Map<String, String>> config = alertMonitorConfig.getConfig();
-        Map<String, String> checkFilePath = config.get("check_file_ipat");
-        Map<String, String> moveFilePath = config.get("move_file_ipat");
-        logger.info("The time is now {}", dateFormat.format(new Date()));
-        try {
-            File folder = new File(checkFilePath.getOrDefault("path", ""));
-            File[] listOfFiles = folder.listFiles();
-            if (listOfFiles == null || listOfFiles.length == 0) {
-                logger.info("listOfFiles: {}", (Object) listOfFiles);
-                return;
-            }
-            String toDay = touchTime.format(new Date(System.currentTimeMillis()));
-            String fromDay = dateFormatFile.format(new Date(System.currentTimeMillis()));
-
-            String fromFile = "SMARTNET_" + fromDay;
-            String toFile = "SMARTNET_" + fromDay + "050102.csv";
-            String time = toDay + "0501";
-            for (File listOfFile : listOfFiles) {
-                if (listOfFile.isFile() && listOfFile.getName().contains(fromFile)) {
-                    logger.info("File: {}", listOfFile.getName());
-                    fromFile = listOfFile.getName();
-                    break;
-                }
-            }
-
-            int countRow = ExcelUtils.countRowFile(checkFilePath.getOrDefault("path", "") + fromFile) - 2;
-            if (countRow == -2) {
-                logger.info("Count row file excel false");
-                this.runExportFileIPAT();
-                alertMonitorService.alertCallByText("Not found file excel");
-                return;
-            }
-
-            int countRecord = MySQLConnector.getInstance().executeQuery();
-            if(countRecord == -1){
-                logger.info("SQL execute false");
-                alertMonitorService.alertCallByText("Query my SQL fail");
-                return;
-            }
-
-            logger.info("countRow: {}, countRecord: {}", countRow, countRecord);
-            if (countRecord == countRow) {
-                this.moveFileIPATSh(fromFile, toFile, time, moveFilePath.getOrDefault("path", ""));
-                return;
-            }
-            alertMonitorService.alertCallByText("Alert file IPAT error");
-            cache.get("export_excel_error");
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
-            alertMonitorService.alertCallByText("Alert file IPAT error");
-        }
-    }
-
     public void runExportFileIPAT() {
 //        Process p;
 //        try {

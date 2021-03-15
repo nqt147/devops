@@ -83,6 +83,12 @@ public class AlertMonitorServiceImpl implements AlertMonitorService {
     }
 
     @Override
+    public ResponseEntity.BodyBuilder alertMonitorCallSupper(String arrPhone, String speakText) throws IOException {
+        JsonObject joResponse = callService.callSpeakText(arrPhone, speakText);
+        return JsonUtil.getInt(joResponse, "r", -1) == 0 ? ResponseEntity.ok() : ResponseEntity.badRequest();
+    }
+
+    @Override
     public void alertCallByText(String text) throws IOException {
         JsonObject joResponse = callService.callSpeakText(text);
         logger.info("alertCallByText: {}", joResponse.toString());

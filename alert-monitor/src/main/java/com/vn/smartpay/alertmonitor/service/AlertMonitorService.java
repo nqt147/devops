@@ -13,6 +13,8 @@ public interface AlertMonitorService {
 
     ResponseEntity.BodyBuilder alertMonitorCallText(JsonObject joData) throws IOException;
 
+    ResponseEntity.BodyBuilder alertMonitorCallSupper(String arrPhone, String speakText) throws IOException;
+
     void alertCallByText(String text) throws IOException;
 
     void reloadConfig();

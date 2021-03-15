@@ -78,6 +78,32 @@ public class CallServiceImpl implements CallService {
     }
 
     @Override
+    public JsonObject callSpeakText(String arrPhone, String speakText) throws IOException {
+        logger.info("callSpeakSupper - arrPhone: {}, speakText: {}", arrPhone, speakText);
+        String[] lstPhone = arrPhone.split(",");
+        Map<String, Map<String, String>> config = alertMonitorConfig.getConfig();
+        Map<String, String> alertCall = config.get("alert_call");
+
+        String access_token = this.genAccessToken(alertCall.getOrDefault("key_sid", ""), alertCall.getOrDefault("key_secret", ""), 3600);
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        RequestBody body = this.buildBodyCallSupper(config.get("alert_call"), speakText, lstPhone);
+        Request request = new Request.Builder()
+                .url(alertCall.getOrDefault("call_url", ""))
+                .method("POST", body)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("X-STRINGEE-AUTH", access_token)
+                .build();
+        Call call = client.newCall(request);
+        Response response = call.execute();
+
+        assert response.body() != null;
+        JsonObject joRes = JsonParser.parseString(response.body().string().toString()).getAsJsonObject();
+        logger.info(joRes.toString());
+        return joRes;
+    }
+
+    @Override
     public String genAccessToken(String keySid, String keySecret, int expireInSecond) {
         try {
             Algorithm algorithmHS = Algorithm.HMAC256(keySecret);
@@ -101,6 +127,35 @@ public class CallServiceImpl implements CallService {
         }
 
         return "";
+    }
+
+    public RequestBody buildBodyCallSupper(Map<String, String> config, String speakText, String[] arrPhone) {
+        MediaType mediaType = MediaType.parse("application/json");
+        Object dayInWeek = config.getOrDefault("day_in_week", "");
+        JsonElement eleDayInWeek = gson.toJsonTree(dayInWeek);
+
+        Object bodyCall = config.getOrDefault("body_call", "");
+        JsonObject joBodyCall = gson.toJsonTree(bodyCall).getAsJsonObject();
+        JsonArray arrTo = new JsonArray();
+        for (String eleDay : arrPhone) {
+            JsonObject joTo = new JsonObject();
+            joTo.addProperty("number", eleDay);
+            joTo.addProperty("type", "external");
+            joTo.addProperty("alias", "1");
+
+            arrTo.add(joTo);
+        }
+        JsonArray actions = joBodyCall.getAsJsonArray("actions");
+        if (speakText != null && !"".equalsIgnoreCase(speakText)) {
+            JsonObject text = new JsonObject();
+            text.addProperty("action", "talk");
+            text.addProperty("text", speakText);
+            actions.add(text);
+        }
+        joBodyCall.add("to", arrTo);
+        joBodyCall.add("actions", actions);
+
+        return RequestBody.create(mediaType, gson.toJson(joBodyCall));
     }
 
     public RequestBody buildBody(Map<String, String> config, String speakText) {

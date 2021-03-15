@@ -21,8 +21,13 @@ public class MySQLConnector {
 
     private static Connection getConnection() throws SQLException {
         if (conn == null || conn.isClosed()) {
-            conn = DriverManager.getConnection("jdbc:mysql://10.5.18.110:3306/sn_utility_reconciliation?useSSL=false",
-                    "operation_tool", "qEBuSdNSYfohYJwQPgSUTet2ofD97pRy");
+            try{
+                conn = DriverManager.getConnection("jdbc:mysql://10.5.18.110:3306/sn_utility_reconciliation?useSSL=false",
+                        "operation_tool", "qEBuSdNSYfohYJwQPgSUTet2ofD97pRy");
+            }catch (Exception ex){
+                conn = DriverManager.getConnection("jdbc:mysql://10.5.18.110:3306/sn_utility_reconciliation?useSSL=false",
+                        "operation_tool", "qEBuSdNSYfohYJwQPgSUTet2ofD97pRy");
+            }
         }
 
         return conn;
@@ -38,11 +43,11 @@ public class MySQLConnector {
     }
 
     public synchronized Integer executeQuery() throws SQLException {
-        String tableName = "fec_repayment" + dayFile.format(new Date(System.currentTimeMillis()));
+        long yesterdayMili = System.currentTimeMillis() - 86400000L;
+        String tableName = "fec_repayment" + dayFile.format(new Date(yesterdayMili));
         PreparedStatement pst = null;
         ResultSet rs = null;
         int counter = 0;
-        long yesterdayMili = System.currentTimeMillis() - 86400000L;
         String yesterday = dateFormatFile.format(new Date(yesterdayMili));
         String startDay = yesterday + "T00:00:00.000+07:00";
         String endDay = yesterday + "T23:59:59.999+07:00";
