@@ -3,6 +3,7 @@ package com.vn.smartpay.alertmonitor.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.vn.smartpay.alertmonitor.elasticsearch.ElasticSearchController;
 import com.vn.smartpay.alertmonitor.service.impl.AlertMonitorServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -27,21 +29,39 @@ public class AlertMonitorController {
     AlertMonitorServiceImpl alertMonitorService;
 
     @RequestMapping(value = "/alert_call", method = RequestMethod.POST)
-    public ResponseEntity<String> alertGrayLog() throws IOException {
+    public ResponseEntity<String> alertNoSpeak(HttpServletRequest request) throws IOException {
+        logger.info("alert_call | ipClient : " + request.getRemoteAddr());
         alertMonitorService.alertMonitorCall();
         return new ResponseEntity<>("success!", HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/alert_call_graylog", method = RequestMethod.POST)
+    public ResponseEntity<String> alertGrayLog(HttpServletRequest request) throws IOException {
+        logger.info("alert_call_graylog | ipClient : " + request.getRemoteAddr());
+        alertMonitorService.alertMonitorCallGraylog();
+        return new ResponseEntity<>("success!", HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/alert_call_speak", method = RequestMethod.POST)
-    public ResponseEntity<String> alertCallSpeakText(@RequestBody String data) throws IOException {
+    public ResponseEntity<String> alertCallSpeakText(HttpServletRequest request,@RequestBody String data) throws IOException {
+        logger.info("alert_call_speak | ipClient : " + request.getRemoteAddr());
         logger.info("Request: {}", data);
         JsonObject joData = JsonParser.parseString(data).getAsJsonObject();
         alertMonitorService.alertMonitorCallSpeakText(joData);
         return new ResponseEntity<>("success!", HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/alert_call_dev", method = RequestMethod.POST)
+    public ResponseEntity<String> alertCallDev(HttpServletRequest request,@RequestBody String data) throws IOException {
+        logger.info("alert_call_dev | ipClient : " + request.getRemoteAddr());
+        logger.info("Request: {}", data);
+        alertMonitorService.alertMonitorCallDev();
+        return new ResponseEntity<>("success!", HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/alert_call_text", method = RequestMethod.POST)
-    public ResponseEntity<String> alertCallText(@RequestBody String data) throws IOException {
+    public ResponseEntity<String> alertCallText(HttpServletRequest request,@RequestBody String data) throws IOException {
+        logger.info("alert_call_text | ipClient : " + request.getRemoteAddr());
         logger.info("Request: {}", data);
         JsonObject joData = JsonParser.parseString(data).getAsJsonObject();
         alertMonitorService.alertMonitorCallText(joData);
@@ -50,8 +70,10 @@ public class AlertMonitorController {
 
     @RequestMapping(value = "/alert_call_supper", method = RequestMethod.GET)
     public ResponseEntity<String> alertCallSupper(
+            HttpServletRequest request,
             @RequestParam(value = "list_phone", defaultValue = "aaa") String listPhone,
             @RequestParam(value = "speak_text", defaultValue = "error") String speakText) throws IOException {
+        logger.info("alert_call_supper | ipClient : " + request.getRemoteAddr());
         System.out.println(listPhone + speakText);
         alertMonitorService.alertMonitorCallSupper(listPhone, speakText);
         return new ResponseEntity<>("success!", HttpStatus.OK);
@@ -72,6 +94,12 @@ public class AlertMonitorController {
     @RequestMapping(value = "/restart_merchant_hivemq", method = RequestMethod.POST)
     public ResponseEntity<String> restartMerchantHiveMQ(@RequestBody String data) {
         alertMonitorService.restartMerchantHiveMQ(data);
+        return new ResponseEntity<>("success!", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/restart_kyc", method = RequestMethod.POST)
+    public ResponseEntity<String> restartKyc(@RequestBody String data) {
+        alertMonitorService.restartKYC(data);
         return new ResponseEntity<>("success!", HttpStatus.OK);
     }
 
@@ -104,5 +132,12 @@ public class AlertMonitorController {
             e.printStackTrace();
         }
         return new ResponseEntity<>(ipAddress, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/execute", method = RequestMethod.POST)
+    public ResponseEntity<String> execute() throws IOException {
+        ElasticSearchController client = new ElasticSearchController();
+        client.executeElastic();
+        return new ResponseEntity<>("ipAddress", HttpStatus.OK);
     }
 }

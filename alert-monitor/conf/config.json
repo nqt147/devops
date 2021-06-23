@@ -81,5 +81,13 @@
   },
   "restart_merchant_hivemq": {
     "path": "./script/restart_sp_merchant_consumer_hivemq.sh"
+  },
+  "dev": {
+    "number_phones": "",
+    "text": ""
+  },
+  "mysql": {
+    "host": "10.5.18.110",
+    "port": "3306"
   }
 }

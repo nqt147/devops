@@ -45,6 +45,11 @@ public class AlertMonitorServiceImpl implements AlertMonitorService {
     }
 
     @Override
+    public ResponseEntity.BodyBuilder alertMonitorCallGraylog() throws IOException {
+        JsonObject joResponse = callService.callSpeakText("alert gray log");
+        return joResponse.get("r").getAsInt() == 0 ? ResponseEntity.ok() : ResponseEntity.badRequest();    }
+
+    @Override
     public ResponseEntity.BodyBuilder alertMonitorCallSpeakText(JsonObject joData) throws IOException {
         JsonArray arrAttachments = joData.getAsJsonArray("attachments").getAsJsonArray();
         JsonObject joAttachment = arrAttachments.get(0).getAsJsonObject();
@@ -85,6 +90,12 @@ public class AlertMonitorServiceImpl implements AlertMonitorService {
     @Override
     public ResponseEntity.BodyBuilder alertMonitorCallSupper(String arrPhone, String speakText) throws IOException {
         JsonObject joResponse = callService.callSpeakText(arrPhone, speakText);
+        return JsonUtil.getInt(joResponse, "r", -1) == 0 ? ResponseEntity.ok() : ResponseEntity.badRequest();
+    }
+
+    @Override
+    public ResponseEntity.BodyBuilder alertMonitorCallDev() throws IOException {
+        JsonObject joResponse = callService.callSpeakTextDev();
         return JsonUtil.getInt(joResponse, "r", -1) == 0 ? ResponseEntity.ok() : ResponseEntity.badRequest();
     }
 
@@ -210,6 +221,13 @@ public class AlertMonitorServiceImpl implements AlertMonitorService {
         JsonObject jsonObject = new JsonParser().parse(data).getAsJsonObject();
         logger.info("alertApplication: {}", jsonObject);
         this.runSh("restart_merchant_hivemq");
+    }
+
+    @Override
+    public void restartKYC(String data) {
+        JsonObject jsonObject = new JsonParser().parse(data).getAsJsonObject();
+        logger.info("alertApplication: {}", jsonObject);
+        this.runSh("restart_kyc");
     }
 
     @Override

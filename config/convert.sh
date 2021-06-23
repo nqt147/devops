@@ -1,12 +1,19 @@
 #!/bin/bash
 
 if [ -z $1 ]; then
-  echo "Path file invalid"
+  echo "Path file runserver.sh invalid"
+  echo "Ex: /smartpay/script/convert_docker_file.sh runserver.sh"
   exit 1
 fi
 
-touch DockerFile
-chmod +x DockerFile
+IS_CHECK=$(/bin/ls -al Dockerfile | wc -l)
+
+if [ $IS_CHECK -eq 0 ]; then
+  touch Dockerfile
+  chmod +x Dockerfile
+  echo "" > Dockerfile
+fi
+
 
 input="$1"
 LINE=""
@@ -56,5 +63,4 @@ done <"$input"
 FINAL_LINE="$FINAL_LINE$RUN"
 
 
-echo -e "$FINAL_LINE" >> DockerFile
-
+echo -e "$FINAL_LINE" >> Dockerfile

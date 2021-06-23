@@ -9,11 +9,15 @@ public interface AlertMonitorService {
 
     ResponseEntity.BodyBuilder alertMonitorCall() throws IOException;
 
+    ResponseEntity.BodyBuilder alertMonitorCallGraylog() throws IOException;
+
     ResponseEntity.BodyBuilder alertMonitorCallSpeakText(JsonObject joData) throws IOException;
 
     ResponseEntity.BodyBuilder alertMonitorCallText(JsonObject joData) throws IOException;
 
     ResponseEntity.BodyBuilder alertMonitorCallSupper(String arrPhone, String speakText) throws IOException;
+
+    ResponseEntity.BodyBuilder alertMonitorCallDev() throws IOException;
 
     void alertCallByText(String text) throws IOException;
 
@@ -22,6 +26,8 @@ public interface AlertMonitorService {
     void alertApplication(String data);
 
     void restartMerchantHiveMQ(String data);
+
+    void restartKYC(String data);
 
     void verifyFileIPAT();
 }
