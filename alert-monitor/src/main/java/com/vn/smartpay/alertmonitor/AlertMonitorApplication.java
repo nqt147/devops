@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 //@SpringBootApplication(scanBasePackages = {"me.ramswaroop.jbot", "com.vn.smartpay.alertmonitor"})
 @SpringBootApplication
-@EnableScheduling
+//@EnableScheduling
 public class AlertMonitorApplication {
     public static void main(String[] args) {
         SpringApplication.run(AlertMonitorApplication.class, args);

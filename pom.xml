@@ -19,6 +19,7 @@
         <module>common</module>
         <module>entity</module>
         <module>slack</module>
+
     </modules>
 
 </project>

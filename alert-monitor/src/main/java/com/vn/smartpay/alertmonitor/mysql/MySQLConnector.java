@@ -2,10 +2,12 @@ package com.vn.smartpay.alertmonitor.mysql;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
 
+@Service
 public class MySQLConnector {
 
     private static final Logger logger = LoggerFactory.getLogger(MySQLConnector.class);
