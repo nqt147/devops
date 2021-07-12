@@ -9,7 +9,7 @@ public interface AlertMonitorService {
 
     ResponseEntity.BodyBuilder alertMonitorCall() throws IOException;
 
-    ResponseEntity.BodyBuilder alertMonitorCallGraylog() throws IOException;
+    ResponseEntity.BodyBuilder alertMonitorCallGraylog(JsonObject data) throws IOException;
 
     ResponseEntity.BodyBuilder alertMonitorCallSpeakText(JsonObject joData) throws IOException;
 
@@ -18,6 +18,10 @@ public interface AlertMonitorService {
     ResponseEntity.BodyBuilder alertMonitorCallSupper(String arrPhone, String speakText) throws IOException;
 
     ResponseEntity.BodyBuilder alertMonitorCallDev() throws IOException;
+
+    ResponseEntity.BodyBuilder alertMonitorCallDev(String teamName) throws IOException;
+
+    ResponseEntity.BodyBuilder alertMonitorCallDevForOperationTeam() throws IOException;
 
     void alertCallByText(String text) throws IOException;
 

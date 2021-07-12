@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -36,14 +33,15 @@ public class AlertMonitorController {
     }
 
     @RequestMapping(value = "/alert_call_graylog", method = RequestMethod.POST)
-    public ResponseEntity<String> alertGrayLog(HttpServletRequest request) throws IOException {
+    public ResponseEntity<String> alertGrayLog(HttpServletRequest request, @RequestBody String data) throws IOException {
         logger.info("alert_call_graylog | ipClient : " + request.getRemoteAddr());
-        alertMonitorService.alertMonitorCallGraylog();
+        JsonObject joData = JsonParser.parseString(data).getAsJsonObject();
+        alertMonitorService.alertMonitorCallGraylog(joData);
         return new ResponseEntity<>("success!", HttpStatus.OK);
     }
 
     @RequestMapping(value = "/alert_call_speak", method = RequestMethod.POST)
-    public ResponseEntity<String> alertCallSpeakText(HttpServletRequest request,@RequestBody String data) throws IOException {
+    public ResponseEntity<String> alertCallSpeakText(HttpServletRequest request, @RequestBody String data) throws IOException {
         logger.info("alert_call_speak | ipClient : " + request.getRemoteAddr());
         logger.info("Request: {}", data);
         JsonObject joData = JsonParser.parseString(data).getAsJsonObject();
@@ -52,15 +50,23 @@ public class AlertMonitorController {
     }
 
     @RequestMapping(value = "/alert_call_dev", method = RequestMethod.POST)
-    public ResponseEntity<String> alertCallDev(HttpServletRequest request,@RequestBody String data) throws IOException {
+    public ResponseEntity<String> alertCallDev(HttpServletRequest request, @RequestBody String data) throws IOException {
         logger.info("alert_call_dev | ipClient : " + request.getRemoteAddr());
         logger.info("Request: {}", data);
         alertMonitorService.alertMonitorCallDev();
         return new ResponseEntity<>("success!", HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/{name}/alert_call_dev", method = RequestMethod.POST)
+    public ResponseEntity<String> alertCallDev(HttpServletRequest request, @RequestBody String data, @PathVariable("name") String name) throws IOException {
+        logger.info("alert_call_dev: {} | ipClient : {}", name, request.getRemoteAddr());
+        logger.info("Request: {}", data);
+        alertMonitorService.alertMonitorCallDev(name);
+        return new ResponseEntity<>("success!", HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/alert_call_text", method = RequestMethod.POST)
-    public ResponseEntity<String> alertCallText(HttpServletRequest request,@RequestBody String data) throws IOException {
+    public ResponseEntity<String> alertCallText(HttpServletRequest request, @RequestBody String data) throws IOException {
         logger.info("alert_call_text | ipClient : " + request.getRemoteAddr());
         logger.info("Request: {}", data);
         JsonObject joData = JsonParser.parseString(data).getAsJsonObject();

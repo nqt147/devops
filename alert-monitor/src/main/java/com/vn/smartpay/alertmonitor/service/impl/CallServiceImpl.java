@@ -83,9 +83,42 @@ public class CallServiceImpl implements CallService {
         Map<String, Map<String, String>> config = alertMonitorConfig.getConfig();
         Map<String, String> alertCall = config.get("alert_call");
         Map<String, String> dev = config.get("dev");
-        String numberPhones = dev.getOrDefault("number_phones","84964129341");
+        String numberPhones = dev.getOrDefault("number_phones", "84964129341");
         String[] lstPhone = numberPhones.split(",");
-        String text = dev.getOrDefault("text","error call dev");
+        String text = dev.getOrDefault("text", "error call dev");
+
+        String access_token = this.genAccessToken(alertCall.getOrDefault("key_sid", ""), alertCall.getOrDefault("key_secret", ""), 3600);
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        RequestBody body = this.buildBodyCallSupper(config.get("alert_call"), text, lstPhone);
+        Request request = new Request.Builder()
+                .url(alertCall.getOrDefault("call_url", ""))
+                .method("POST", body)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("X-STRINGEE-AUTH", access_token)
+                .build();
+        Call call = client.newCall(request);
+        Response response = call.execute();
+
+        assert response.body() != null;
+        JsonObject joRes = JsonParser.parseString(response.body().string().toString()).getAsJsonObject();
+        logger.info(joRes.toString());
+        return joRes;
+    }
+
+    @Override
+    public JsonObject callSpeakTextDev(String teamName) throws IOException {
+        logger.info("callSpeakTextDev");
+        Map<String, Map<String, String>> config = alertMonitorConfig.getConfig();
+        Map<String, String> alertCall = config.get("alert_call");
+        Map<String, String> dev = config.get(teamName);
+        if (dev == null) {
+            logger.info("callSpeakTextDev get config {} null", teamName);
+            return null;
+        }
+        String numberPhones = dev.getOrDefault("number_phones", "84964129341");
+        String[] lstPhone = numberPhones.split(",");
+        String text = dev.getOrDefault("text", "error call dev");
 
         String access_token = this.genAccessToken(alertCall.getOrDefault("key_sid", ""), alertCall.getOrDefault("key_secret", ""), 3600);
         OkHttpClient client = new OkHttpClient().newBuilder()

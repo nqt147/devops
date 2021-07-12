@@ -23,7 +23,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +35,8 @@ public class AlertMonitorServiceImpl implements AlertMonitorService {
     public static final InMemoryCache cache = new InMemoryCache();
     private static final Logger logger = LoggerFactory.getLogger(AlertMonitorServiceImpl.class);
     private static final Gson gson = new Gson();
+    public static final SimpleDateFormat sdfTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
     @Autowired
     AlertMonitorConfig alertMonitorConfig;
 
@@ -45,9 +50,15 @@ public class AlertMonitorServiceImpl implements AlertMonitorService {
     }
 
     @Override
-    public ResponseEntity.BodyBuilder alertMonitorCallGraylog() throws IOException {
-        JsonObject joResponse = callService.callSpeakText("alert gray log");
-        return joResponse.get("r").getAsInt() == 0 ? ResponseEntity.ok() : ResponseEntity.badRequest();    }
+    public ResponseEntity.BodyBuilder alertMonitorCallGraylog(JsonObject joData) throws IOException {
+        String text = joData.get("event_definition_title").getAsString();
+        logger.info("Title alert: {}", text);
+        if ("ES_DATA_Replication_Alert".equals(text)) {
+
+        }
+        JsonObject joResponse = callService.callSpeakText("graylog " + text);
+        return joResponse.get("r").getAsInt() == 0 ? ResponseEntity.ok() : ResponseEntity.badRequest();
+    }
 
     @Override
     public ResponseEntity.BodyBuilder alertMonitorCallSpeakText(JsonObject joData) throws IOException {
@@ -100,16 +111,41 @@ public class AlertMonitorServiceImpl implements AlertMonitorService {
     }
 
     @Override
+    public ResponseEntity.BodyBuilder alertMonitorCallDev(String teamName) throws IOException {
+        JsonObject joResponse = callService.callSpeakTextDev(teamName);
+        return JsonUtil.getInt(joResponse, "r", -1) == 0 ? ResponseEntity.ok() : ResponseEntity.badRequest();
+    }
+
+    @Override
+    public ResponseEntity.BodyBuilder alertMonitorCallDevForOperationTeam() throws IOException {
+        JsonObject joResponse = callService.callSpeakTextDev("operation_team");
+        return JsonUtil.getInt(joResponse, "r", -1) == 0 ? ResponseEntity.ok() : ResponseEntity.badRequest();
+    }
+
+    @Override
     public void alertCallByText(String text) throws IOException {
         JsonObject joResponse = callService.callSpeakText(text);
         logger.info("alertCallByText: {}", joResponse.toString());
     }
 
     public ResponseEntity.BodyBuilder alertCritical(JsonObject joAttachment) throws IOException {
-        JsonObject joField = joAttachment.get("fields").getAsJsonArray().get(0).getAsJsonObject();
-        String title = JsonUtil.getString(joField, "title", "Alert critical");
-        String text = this.filterMessage(title);
-        JsonObject joResponse = callService.callSpeakText(text);
+        JsonObject joResponse = null;
+        try {
+            JsonObject joField = joAttachment.get("fields").getAsJsonArray().get(0).getAsJsonObject();
+            String title = JsonUtil.getString(joField, "title", "Alert critical");
+            String text = this.filterMessage(title);
+            Date currentTime = new Date(System.currentTimeMillis());
+            String date = sdfDate.format(currentTime);
+            Date startTime = sdfTime.parse(date + " 01:00:00");
+            Date endTime = sdfTime.parse(date + " 03:00:00");
+            if (currentTime.after(startTime) && currentTime.before(endTime) && text.contains("10.4.16.113")) {
+                return ResponseEntity.ok();
+            }
+            joResponse = callService.callSpeakText(text);
+        } catch (ParseException e) {
+            e.printStackTrace();
+
+        }
 
         return JsonUtil.getInt(joResponse, "r", -1) == 0 ? ResponseEntity.ok() : ResponseEntity.badRequest();
     }
@@ -241,7 +277,7 @@ public class AlertMonitorServiceImpl implements AlertMonitorService {
         }
     }
 
-    public void runShV2(String cmd){
+    public void runShV2(String cmd) {
         Process p;
         try {
             Runtime run = Runtime.getRuntime();
@@ -284,7 +320,7 @@ public class AlertMonitorServiceImpl implements AlertMonitorService {
         }
     }
 
-    public void runFileSh(String cmd){
+    public void runFileSh(String cmd) {
         Process p;
 
         Runtime run = Runtime.getRuntime();

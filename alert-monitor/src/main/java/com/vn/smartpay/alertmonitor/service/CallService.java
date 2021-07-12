@@ -11,6 +11,8 @@ public interface CallService {
 
     JsonObject callSpeakTextDev() throws IOException;
 
+    JsonObject callSpeakTextDev(String teamName) throws IOException;
+
     JsonObject callSpeakText(String arrPhone, String speakText) throws IOException;
 
     String genAccessToken(String keySid, String keySecret, int expireInSecond);
